@@ -1,8 +1,11 @@
 from os import listdir
 from os import sep
 import numpy as np
-#Open file per participant and save in a txt number of trials watched
-
+'''
+    Open file per participant and save in a txt number of trials watched
+    the files are taken from the participant data, the one that contains the onset of every ERP stimulus
+    used to estimate the number of trials watched per infant and decide if the number of trials were enough
+'''
 def find_files(path, name):
     nfile = ''
     for item in listdir(path):
@@ -14,7 +17,6 @@ def find_files(path, name):
 main_path = 'G:\Claire Project\Data\Participants'
 #Open a file to write the results to a txt file
 f = open('number_of_trials_watched.txt', 'w')
-
 number_of_trials = []
 
 for participant in listdir(main_path):
