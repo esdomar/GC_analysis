@@ -1,11 +1,11 @@
-from open_write_functions import open_csv
 import numpy as np
-import csv
+from os import sep
 
 # Open file summary file .csv
 ''' File structure:
-    0 - General_comments
+    0 - General_comments: H = No Horita ; V = Only videos ; N = No EEG
     1 - Participant
+    From now on: 1 = Yes ; 0 = No
     2 - Included_ERP
     3 - GC
     4 - Test
@@ -16,21 +16,29 @@ import csv
     9 - Onset_V
     10 - Onset_P
     11 - MatlabF
-    12 - Other comments
 '''
 working_path = 'C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis'
 
 #Create numpy data type according to the data
 dt = np.dtype(
-    [('Comments', np.str_, 20), ('Participants', np.int_), ('Included_ERP', np.int_), ('GC', np.int_), ('Test', np.int_),
-     ('Files', [('Video', np.int_), ('EEG', np.int_), ('Calibration', np.int_),
-                ('Gaze', np.int_), ('Onset_V', np.int_), ('Onset_P', np.int_), ('Matlab_F', np.int_)])])
+    [('Comments', np.str, 20), ('Participants', np.int), ('Included_ERP', np.int), ('GC', np.int), ('Test', np.int),
+     ('Files', [('Video', np.int), ('EEG', np.int), ('Calibration', np.int),
+                ('Gaze', np.int), ('Onset_V', np.int), ('Onset_P', np.int), ('Matlab_F', np.int)])])
 fname = '../Files Summarytxt.txt'
 
 db = np.loadtxt(fname, dtype=dt, delimiter="\t", skiprows=1)
 
-#Compute the number of stimulus that each participant watched
+#Include the number of stimulus that each participant watched
+'''
+   The number of trials that each participant watched was calculated using the script "compute_number_trials_watched.py"
+'''
+trials_watched_path = working_path + sep + 'number_of_trials_watched.txt'
+trials_watched = np.loadtxt(trials_watched_path, dtype=np.dtype([('participant', np.str, 4), ('trials', np.int)]))
 
+for i, item in enumerate(trials_watched):
+    db['Test'][i] = item[1]
+#Include the number of trials that have more than 40, 60, and 80% of the data
+#Open the txt file created with the script compute_percentage_etdata.py
 
 #File summary statistics
 '''
