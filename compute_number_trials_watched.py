@@ -1,5 +1,4 @@
-from os import listdir
-from os import sep
+from os import listdir, sep
 import numpy as np
 '''
     Open file per participant and save in a txt number of trials watched
@@ -26,11 +25,12 @@ for participant in listdir(main_path):
     #Raise exception and continue with the next participant if the file is not in the folder
     if onset_file_name == '':
         text = ["the participant " + participant + "does not have the onset_video file required"]
+        f.write(participant + "\t" + "-1")
         raise ValueError(text)
         continue
-        number_of_trials.append(-1)
 
     #import pdb; pdb.set_trace()
+    onset_data=[]
     onset_data = np.loadtxt(part_path + sep + onset_file_name, dtype=int,  delimiter="\t", skiprows=1)
 
 
@@ -41,10 +41,3 @@ for participant in listdir(main_path):
     f.write(participant + "\t" + str(number_of_trials[-1]) + "\n")
         
 f.close()
-
-
-
-
-
-
-
