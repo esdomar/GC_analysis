@@ -21,3 +21,30 @@ Check ET quality data:
 
 Calculate mean time spent in learning phase and ERP phase: (9/10/2014):
 -mean_time_spent.py --> Calculates the time spent on each phase of the experiment per participant. Saves a txt file 'mean_time_spent.txt' with two columns: 1st time learning phase, 2nd ERP.
+
+-Plot and calculate values during the verification movie. The script "verification results.py" Opens the eye tracking data and the timestamp of when the verification movie was shown on the screen and calculates:
+    - Percentage of valid data
+    - Percentage of data inside each area of interest (4 areas = 4 stars)
+    Also saves an image plotting the raw eye tracking data on a representative image of he movie.
+
+---- 15 / 10 / 2014 -----
+After a meeting with Tommy, I'm going to try and "clean" the data. I'm going to read about what is currently done in infant eye trackign pre-processing and decide what method to apply . The guess is that we will apply some smoothing, interpolation and removal of noisy samples. I'm going to look also at the correction algorithm from Frank et al. 2012 and try to apply it to the data.
+
+--- 17/08/2014 ----
+Meeting with Brian, summary:
+- Compute the percentage of valid data (total, during video and during ERP) inside teh screen, ouside the screen but within the trackable boundaries and outside the trackable boundaries (outliers)
+- Implement in python the pre-processing: 
+    1 - Interpolation of missing data using splines
+    2 - Average of both eyes (keeping info from 1 eye when there is one missing)
+    3 - Smooth (using Sam Wass's algorithms)
+    
+ - Validate it against Sam Wass one in Matlab.
+
+-compute again percentage of valid data after the pre-processing and look for patterns
+
+- Additionally the velocity of the gaze data can be calculated to detect non-physiological samples that can be eliminated and interpolated.
+
+-- 20/08/2014
+The script "percentage of et data.py" calculates the percentage of valid data, the percentage inside teh screen, the percentage outside the screen but trackable area and percentage 
+outside the trackable area (outliers). It does it for the entire recording, for the video phase and the erp phase. The results are saved the txt file "perecentage of valid data.txt".
+
