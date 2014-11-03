@@ -1,10 +1,12 @@
 import numpy as np
 from os import listdir, sep
 
-
+'''
+    Necessary code to open the common info files of the Gaze contingency study
+'''
 def open_file_summary():
     #Opens the file summary file
-    fname = 'C://GC data//Results//Files_summary.txt'
+    fname = 'C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis\Results//Files_summary.txt'
     dt = np.dtype(
     [('Comments', np.str, 20), ('Participants', np.int), ('Included_ERP', np.int), ('Included_GC', np.int), ('GC', np.int),
      ('Files', [('Video', np.int), ('EEG', np.int), ('Calibration', np.int),
@@ -32,6 +34,13 @@ def open_erp_onset_file(path):
     return 'This participant has no onset erp file'
 
 
-def available_parts(path):
+def open_accepted_rejected_files():
+    fname = 'C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis//accepted-rejected_trials.csv'
+    return np.loadtxt(fname, dtype=int, delimiter=';', skiprows=1)
+
+
+def available_files(path):
     return listdir(path)
+
+
 

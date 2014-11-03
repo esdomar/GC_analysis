@@ -15,9 +15,12 @@ The problem was solved offline in the files that had this problem in the followi
 'Fixing_sumary_def.xlsx' contains the summary of all the changes made in every file, EEG and ET onset times. This info is useful to remove the extra EEG events during analysis and to keep track of the changes made.
 Git repository available: https://github.com/esdomar/fixing_onset_times
 
+31/10/2014: Some ET onset files were wrongly fixed. All ET files were checked with the EEG onset files. New ET onset files were created for the ones with errors called #et_onset_times_PX_new"
+
 Check ET quality data:
 - 'compute_number_trials_watched.py' --> Opens every trial onset time and counts the number of trials that most likely the infant watched (unless for some experiment the experiment went on going after the child stopped attending to the screen)
-- 'compute_percentage_etdata.py' --> Saves two txt files per participant. One with the percentage of ET validity data per trial. The second containing the ET data indexes corresponding to the onset times of every trial. It also saves a general file containing the number of trials that have been seen with different ET validity data (40, 60, 80, 90) per participant
+
+- 'compute_percentage_etdata.py' --> Saves two txt files per participant. "PX percentage of ET data.txt" with the percentage of ET validity data per trial. "et_data_indexes_every_onset_time.txt" containing the ET data indexes corresponding to the onset times of every trial. It also saves a general ("number_of_trials_per_percentage.txt")file containing the number of trials that have been seen with different ET validity data (40, 60, 80, 90) per participant
 
 Calculate mean time spent in learning phase and ERP phase: (9/10/2014):
 -mean_time_spent.py --> Calculates the time spent on each phase of the experiment per participant. Saves a txt file 'mean_time_spent.txt' with two columns: 1st time learning phase, 2nd ERP.
@@ -28,23 +31,58 @@ Calculate mean time spent in learning phase and ERP phase: (9/10/2014):
     Also saves an image plotting the raw eye tracking data on a representative image of he movie.
 
 ---- 15 / 10 / 2014 -----
-After a meeting with Tommy, I'm going to try and "clean" the data. I'm going to read about what is currently done in infant eye trackign pre-processing and decide what method to apply . The guess is that we will apply some smoothing, interpolation and removal of noisy samples. I'm going to look also at the correction algorithm from Frank et al. 2012 and try to apply it to the data.
+After a meeting with Tommy, I'm going to try to "clean" the data. I'm going to read about what is currently done in infant eye trackign pre-processing and decide what method to apply . The guess is that we will apply some smoothing, interpolation and removal of noisy samples. I'm going to look also at the correction algorithm from Frank et al. 2012 and try to apply it to the data.
 
 --- 17/08/2014 ----
 Meeting with Brian, summary:
-- Compute the percentage of valid data (total, during video and during ERP) inside teh screen, ouside the screen but within the trackable boundaries and outside the trackable boundaries (outliers)
-- Implement in python the pre-processing: 
+- Compute the percentage of valid data (total, during video and during ERP) inside the screen, outside the screen but within the trackable boundaries and outside the trackable boundaries (outliers)
+X - Implement in python the pre-processing: 
     1 - Interpolation of missing data using splines
     2 - Average of both eyes (keeping info from 1 eye when there is one missing)
     3 - Smooth (using Sam Wass's algorithms)
     
- - Validate it against Sam Wass one in Matlab.
+X - Validate it against Sam Wass one in Matlab.
 
--compute again percentage of valid data after the pre-processing and look for patterns
+X -compute again percentage of valid data after the pre-processing and look for patterns
 
-- Additionally the velocity of the gaze data can be calculated to detect non-physiological samples that can be eliminated and interpolated.
+X - Additionally the velocity of the gaze data can be calculated to detect non-physiological samples that can be eliminated and interpolated.
+
+X - Is there a way to detect gaze patterns that tells the baby looked away (not that the eye tracker lost track)
 
 -- 20/08/2014
-The script "percentage of et data.py" calculates the percentage of valid data, the percentage inside teh screen, the percentage outside the screen but trackable area and percentage 
-outside the trackable area (outliers). It does it for the entire recording, for the video phase and the erp phase. The results are saved the txt file "perecentage of valid data.txt".
+- The script "percentage of et data.py" calculates the percentage of valid data, the percentage inside the screen, the percentage outside the screen but trackable area and percentage 
+outside the trackable area (outliers). It does it for the entire recording, for the video phase and the erp phase. 
+The results are saved the txt file "percentage of valid data.txt".
+
+-- 01/11/2014
+New csv file created ('accepeted_rejected_trials.csv') based on Claie's result sheet of trials accepted and rejected per participant. each row is a participant and each column is a trial.
+codes:
+    0 - Trial rejected
+    1 - Trial accepted
+    2 - Not decided
+    9 - Trial not seen
+
+-- 02/11/2014
+'Opens_GC_files.py' has a function per each file with info 
+    - File summary
+    - video_onset_file
+    - erp_onset_file
+    - available files
+    - accepeted_rejected trials
+    
+'accepted_rejected_trials.py' computes the number of accepted and rejected trials per subject. It uses the file 'accepted_rejected_trials.csv'. It saves a txt file in the folder 'partial results' with the results.
+
+-- 03/11/2014
+To calculate the triggering modes, the stimulus onset file per each participant is used. The difference in time in two following onset times is used to calculate the triggering mode:
+The time sequence of a trial could involve the next elements:
+    - Fixation image : 0.7 sec
+    - Checking time: up to 0.5 sec
+    - Attention grabber: up to 3 sec
+    - Fixation image: 0.7 sec
+    - Stimulus: 1 - 1.2 sec
+The different triggering modes times are:
+    - 1st attempt: 1.7 sec to 2.4 sec
+    - 2nd attempt: 2.9 - 6.1 sec
+    - 3rd attempt: from 6.1 (usually 6.7 (don't really know why right now))
+If the difference is bigger than 7.5 sec - There was a pause or an attention grabber was shown. In those cases the trial can not be taken into account.
 
