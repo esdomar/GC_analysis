@@ -2,7 +2,7 @@
    Calculates the time spent on the video and ERP phase per participant.
    Saves the results into a txt file with three columns: participant, time video phase, time ERP phase
 '''
-from open_GC_files import open_file_summary, available_parts, open_video_onset_file, open_erp_onset_file
+from open_GC_files import open_file_summary, available_files, open_video_onset_file, open_erp_onset_file
 from os import sep
 import numpy as np
 from open_find_write import write_file
@@ -22,16 +22,19 @@ if __name__ == '__main__':
     file_summary = open_file_summary()
 
     main_path = 'C:\GC data\Participant_data'
-    folders = available_parts(main_path)
-    time_results = np.zeros((len(folders), 3))
-    f = open('C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis\Results' + sep + 'mean_time_spent.txt', 'w')
+    folders = available_files(main_path)
+    time_results = np.zeros((len(folders), 4))
+    f = open('C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis\Results\partial results' + sep + 'mean_time_spent.txt', 'w')
+    f.write('Participant' + '\t' + 'GC' + '\t' + 'Time video' + '\t' + 'Time ERP' + '\n')
+
     for i, folder in enumerate(folders):
         part_path = main_path + sep + folder
         onset_video = open_video_onset_file(part_path)
         onset_erp = open_erp_onset_file(part_path)
         time_results[i][0] = folder[1:]
-        time_results[i][1] = time_spent(onset_video['Time'])
-        time_results[i][2] = time_spent(onset_erp['Time'])
+        participant_row = [row for row in file_summary if row[1] == int(folder[1:])][0]
+        time_results[i][1] = participant_row[4]
+        time_results[i][2] = time_spent(onset_video['Time'])
+        time_results[i][3] = time_spent(onset_erp['Time'])
     write_file(f, time_results)
     f.close()
-    print time_results
