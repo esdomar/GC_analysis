@@ -23,9 +23,9 @@ if __name__ == '__main__':
 
     main_path = 'C:\GC data\Participant_data'
     folders = available_files(main_path)
-    time_results = np.zeros((len(folders), 4))
+    time_results = np.zeros((len(folders), 5))
     f = open('C:\Users\edz\OneDrive @ Tobii Technology AB\PhD\Chapter 2 - Gaze Contingency\Analysis\Results\partial results' + sep + 'mean_time_spent.txt', 'w')
-    f.write('Participant' + '\t' + 'GC' + '\t' + 'Time video' + '\t' + 'Time ERP' + '\n')
+    f.write('Participant' + '\t' + 'Included GC' + '\t' + 'GC' + '\t' + 'Time video' + '\t' + 'Time ERP' + '\n')
 
     for i, folder in enumerate(folders):
         part_path = main_path + sep + folder
@@ -33,8 +33,10 @@ if __name__ == '__main__':
         onset_erp = open_erp_onset_file(part_path)
         time_results[i][0] = folder[1:]
         participant_row = [row for row in file_summary if row[1] == int(folder[1:])][0]
-        time_results[i][1] = participant_row[4]
-        time_results[i][2] = time_spent(onset_video['Time'])
-        time_results[i][3] = time_spent(onset_erp['Time'])
+        time_results[i][1] = participant_row[3]
+        time_results[i][2] = participant_row[4]
+
+        time_results[i][3] = time_spent(onset_video['Time'])
+        time_results[i][4] = time_spent(onset_erp['Time'])
     write_file(f, time_results)
     f.close()
